@@ -1,15 +1,6 @@
 package body MatrixMult is
 
-    task body MultTaskType is
-        sum: Integer := 0;
-    begin
-        accept Start(A: in MyMat; B: in MyMat; val: out Integer; row: in Integer; col: in Integer) do
-            for i in 1 .. SIZE loop
-                sum := sum + A(row, i)*B(i, col);
-            end loop;
-            val := sum;
-        end Start;
-    end MultTaskType;
+
 
     function SumUP(mat: in MyMat) return Integer is
     total: Integer;
@@ -24,11 +15,31 @@ package body MatrixMult is
     end SumUP;
 
     procedure MatMult(A: in MyMat; B: in MyMat; C: out MyMat) is
-    MultTaskList: array(1 .. SIZE, 1 .. SIZE) of MultTaskType;
+
+        task type MultTaskType is
+            entry Start(row: in Integer; col: in Integer);
+        end MultTaskType;
+
+        task body MultTaskType is
+            sum: Integer := 0;
+            curRow: Integer := 0;
+            curCol: Integer := 0;
+        begin
+            accept Start(row: in Integer; col: in Integer) do
+                curRow := row;
+                curCol := col;
+            end Start;
+            for i in 1 .. SIZE loop
+                sum := sum + A(curRow, i)*B(i, curCol);
+            end loop;
+            C(curRow, curCol) := sum;
+        end MultTaskType;
+
+        MultTaskList: array(1 .. SIZE, 1 .. SIZE) of MultTaskType;
     begin
         for i in 1 .. SIZE loop
             for j in 1 .. SIZE loop
-                MultTaskList(i, j).Start(A, B, C(i,j), i, j);
+                MultTaskList(i, j).Start(i, j);
             end loop;
         end loop;
     end MatMult;

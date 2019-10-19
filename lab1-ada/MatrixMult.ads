@@ -5,9 +5,5 @@ package MatrixMult is
     procedure MatMult(A: in MyMat; B: in MyMat; C: out MyMat);
     procedure SequentialMatMult(A: in MyMat; B: in MyMat; C: out MyMat);
 
-    task type MultTaskType is
-        entry Start(A: in MyMat; B: in MyMat; val: out Integer; row: in Integer; col: in Integer);
-    end MultTaskType;
-
 end MatrixMult;
 

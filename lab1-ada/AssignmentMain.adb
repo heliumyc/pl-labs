@@ -52,5 +52,6 @@ begin
 
     MatMult(A, B, C);
     --SequentialMatMult(A, B, C);
+    
     Printer.Print(C);
 end AssignmentMain;
